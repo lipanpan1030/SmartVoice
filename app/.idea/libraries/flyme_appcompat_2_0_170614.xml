@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="flyme-appcompat-2.0.170614">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.android/build-cache/2c2cf68e529b307bc0c6f9721d41965cdfa11f5a/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/2c2cf68e529b307bc0c6f9721d41965cdfa11f5a/output/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.meizu.flyme.sdk/flyme-appcompat/2.0.170614/3458a4cf46b3c8e97d9976d82bd7ca4fda650948/flyme-appcompat-2.0.170614-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
