@@ -7,6 +7,10 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="40dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/notification_big"/>
         <TextView
             android:id="@+id/remote_txt"
             android:layout_width="wrap_content"
@@ -19,12 +23,12 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/play"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
         <Button
+            android:id="@+id/play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

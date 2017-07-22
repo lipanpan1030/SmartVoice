@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -43,7 +42,6 @@ public class MainActivity extends AppCompatActivity{
     public void simulate(View view) {
         Log.d(TAG, "begin_simulate");
         CompleteToast.makeText(this, "开始展示", Toast.LENGTH_SHORT).show();
-        startService(new Intent(this, SmartVoiceService.class));
 
         mLastSendTime = System.currentTimeMillis();
         View send = LayoutInflater.from(this).inflate(R.layout.send, null);
@@ -58,7 +56,9 @@ public class MainActivity extends AppCompatActivity{
             mContent.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    SmartVoiceService.getInstance().showNotification("路人甲", "正在回复", 1);
+                    Intent intent = new Intent(MainActivity.this, SmartVoiceService.class);
+                    intent.putExtra("btn", "");
+                    startService(intent);
                 }
             }, 2000);
 

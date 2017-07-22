@@ -12,7 +12,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -31,28 +30,31 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
     private static final String BUTTON_PLAY = "play";
     private static final String BUTTON_CANCEL = "cancel";
     private static final String BUTTON_REPLY = "reply";
+
+    private static final String PLAY_END = "playEnd";
+
     RemoteViews mRemoteViews;
+
+    public final static String ACTION_NEW_MESSAGE = "com.meizu.voice.action.NEW_MESSAGE";
 
     private SensorManager mSensorManager;
     private Sensor mProximitySensor;
     private ScreenUtil mScreenUtil;
     private PlayerManager mPlayerManager;
+    NotificationManager mNotification;
 
     private boolean mActive;
 
-    private static SmartVoiceService sInstance = null;
 
     public void onCreate() {
 
         mPlayerManager = PlayerManager.getInstance(this);
         mScreenUtil = ScreenUtil.getInstance(this);
+
+        mNotification =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         initSensor();
 
-        sInstance = this;
-    }
-
-    public static SmartVoiceService getInstance() {
-        return sInstance;
     }
 
     private void initSensor() {
@@ -113,10 +115,7 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
     @Override
     public void onPlayerComplete() {
         Log.d(TAG, "音乐播放完毕");
-        if (mActive) {
-            showNotification("路人甲", "正在回复", 1);
-        }
-
+        showNotification(1, PLAY_END);
     }
     @Override
     public void onPlayerStop() {
@@ -124,54 +123,85 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
     }
 
 
-    public void showNotification(String title, String text, int notificationId) {
+    public void showNotification(int notificationId, String action) {
         BitmapDrawable drawable = (BitmapDrawable) getDrawable(R.drawable.notification_big);
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setPriority(Notification.PRIORITY_DEFAULT)
                 .setShowWhen(false)
-                .setContentTitle(title)
-                .setContentText(text)
+                .setOngoing(true)
                 .setSmallIcon(R.drawable.notification)
+                .setContentText("智能语音助手")
+                .setContentTitle("智能语音助手")
                 .setLargeIcon(drawable.getBitmap())
                 .setOngoing(false)
                 .setAutoCancel(false);
+
         mRemoteViews = new RemoteViews(getPackageName(), R.layout.noti_remote);
-        mRemoteViews.setViewVisibility(R.id.reply, View.INVISIBLE);
-        mRemoteViews.setViewVisibility(R.id.cancel, View.INVISIBLE);
+
+        switch (action) {
+            case BUTTON_PLAY:
+                mRemoteViews.setViewVisibility(R.id.play, View.GONE);
+                mRemoteViews.setViewVisibility(R.id.reply, View.GONE);
+                mRemoteViews.setViewVisibility(R.id.cancel, View.GONE);
+                mRemoteViews.setTextViewText(R.id.remote_txt, "正在播放");
+                // 没有播放的时候 靠近屏幕播放
+                if (!mPlayerManager.isPlaying()){
+                    mPlayerManager.changeToSpeaker();
+                    mPlayerManager.play(PATH, this);
+                }
+                break;
+            case BUTTON_CANCEL:
+                mNotification.cancel(1);
+                break;
+            case BUTTON_REPLY:
+                mNotification.cancel(1);
+                // 发一条信息出去
+                break;
+            case PLAY_END:
+                mRemoteViews.setViewVisibility(R.id.play, View.GONE);
+                mRemoteViews.setViewVisibility(R.id.reply, View.VISIBLE);
+                mRemoteViews.setViewVisibility(R.id.cancel, View.VISIBLE);
+                mRemoteViews.setTextViewText(R.id.remote_txt, "正在录音");
+                break;
+            default:
+                mRemoteViews.setViewVisibility(R.id.play, View.VISIBLE);
+                mRemoteViews.setViewVisibility(R.id.reply, View.GONE);
+                mRemoteViews.setViewVisibility(R.id.cancel, View.GONE);
+                break;
+        }
 
         //实例化一个指向MusicService的intent
-        Intent intent = new Intent(this, SmartVoiceService.class);
-        intent.setAction("com.meizu.voice");
+        Intent intent = new Intent(ACTION_NEW_MESSAGE);
 
         //设置play按钮的点击事件
         intent.putExtra(BUTTON_INDEX, BUTTON_PLAY);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mRemoteViews.setOnClickPendingIntent(R.id.play, pendingIntent);
 
         //设置next按钮的点击事件
-//        intent.putExtra(BUTTON_INDEX, BUTTON_CANCEL);
-//        pendingIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//        mRemoteViews.setOnClickPendingIntent(R.id.cancel, pendingIntent);
-//
-//        //设置prev按钮的点击事件
-//        intent.putExtra(BUTTON_INDEX, BUTTON_REPLY);
-//        pendingIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        mRemoteViews.setOnClickPendingIntent(R.id.reply, pendingIntent);
+        intent.putExtra(BUTTON_INDEX, BUTTON_CANCEL);
+        pendingIntent = PendingIntent.getService(this, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mRemoteViews.setOnClickPendingIntent(R.id.cancel, pendingIntent);
 
+        //设置prev按钮的点击事件
+        intent.putExtra(BUTTON_INDEX, BUTTON_REPLY);
+        pendingIntent = PendingIntent.getService(this, 3, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mRemoteViews.setOnClickPendingIntent(R.id.reply, pendingIntent);
 
         builder.setContent(mRemoteViews);
         Notification notification = builder.build();
         notification.flags |= 0x04000000;
+        notification.extras.putInt("headsup", 0);
         notification.extras.putInt("flyme.showHeadUpInOccluded", 1);
 
-        NotificationManager nm =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(notificationId, notification);
+        mNotification.notify(notificationId, notification);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        String extra = intent.getStringExtra(BUTTON_INDEX);
+        showNotification(1, extra);
+        return START_STICKY;
     }
 }
