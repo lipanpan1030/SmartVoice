@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mc_cir_progress_button_green">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:textStyle="normal"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:text="发送语音信息"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:textStyle="normal"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:text="边小溪，周末一起爬山吧"/>
+</LinearLayout>

@@ -23,7 +23,12 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ui.SmartVoiceService" />
+        <service android:name=".ui.SmartVoiceService" >
+
+            <intent-filter>
+                <action android:name="com.meizu.voice" />
+            </intent-filter>
+            </service>
 
     </application>
 
