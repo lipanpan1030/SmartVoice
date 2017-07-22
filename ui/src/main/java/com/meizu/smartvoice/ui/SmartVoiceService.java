@@ -81,6 +81,10 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
         float distance = event.values[0];
         Log.d(TAG, "distance:" + distance);
         mActive = (distance >= 0.0 && distance < Math.min(mProximitySensor.getMaximumRange(), 5.0));
+
+        if (mPlayerManager.isPlayCompleted()) {
+            return;
+        }
         if (mPlayerManager.isWiredHeadsetOn()){
             return;
         }
@@ -97,6 +101,7 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
             }
         } else {
             if (mActive) {
+                showNotification(1, BUTTON_PLAY);
                 mPlayerManager.changeToReceiver();
                 mScreenUtil.setScreenOff();
                 mPlayerManager.play(PATH, this);
@@ -125,13 +130,13 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
 
 
     public void showNotification(int notificationId, String action) {
-        BitmapDrawable drawable = (BitmapDrawable) getDrawable(R.drawable.notification_big);
+        BitmapDrawable drawable = (BitmapDrawable) getDrawable(R.mipmap.ic_launcher);
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setPriority(Notification.PRIORITY_DEFAULT)
                 .setShowWhen(false)
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.notification)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText("智能语音助手")
                 .setContentTitle("智能语音助手")
                 .setLargeIcon(drawable.getBitmap())
@@ -164,7 +169,7 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
                 mRemoteViews.setViewVisibility(R.id.play, View.GONE);
                 mRemoteViews.setViewVisibility(R.id.reply, View.VISIBLE);
                 mRemoteViews.setViewVisibility(R.id.cancel, View.VISIBLE);
-                mRemoteViews.setTextViewText(R.id.remote_txt, "正在录音");
+                mRemoteViews.setTextViewText(R.id.remote_txt, "正在录音...");
                 break;
             default:
                 mRemoteViews.setViewVisibility(R.id.play, View.VISIBLE);

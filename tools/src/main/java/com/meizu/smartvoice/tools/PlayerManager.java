@@ -93,6 +93,7 @@ public class PlayerManager {
      * @param callback 播放回调函数
      */
     public void play(String path, @Nullable final PlayCallback callback){
+        isPlayCompleted = false;
         this.filePath = path;
         this.callback = callback;
         try {
@@ -119,6 +120,7 @@ public class PlayerManager {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     //mediaPlayer.release();
+                    isPlayCompleted = true;
                     if (callback != null) {
                         callback.onPlayerComplete();
                     }
@@ -236,6 +238,12 @@ public class PlayerManager {
      */
     public boolean isPlaying() {
         return mediaPlayer != null && mediaPlayer.isPlaying();
+    }
+
+    boolean isPlayCompleted = false;
+
+    public boolean isPlayCompleted() {
+        return isPlayCompleted;
     }
 
 }

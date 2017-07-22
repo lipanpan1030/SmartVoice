@@ -19,15 +19,22 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/begin_simulate"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:enabled="true"
-        android:text="发送语音信息"
-        android:textStyle="normal"
-        android:textSize="16sp"/>
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp">
+        <Button
+            android:id="@+id/begin_simulate"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:enabled="true"
+            android:text="发送语音信息"
+            android:textStyle="normal"
+            android:textSize="16sp"
+            />
+    </LinearLayout>
+
 
 </LinearLayout>

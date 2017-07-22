@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/mc_cir_progress_button_green">
-    <TextView
+    android:layout_height="wrap_content">
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:textStyle="normal"
-        android:textSize="25sp"
-        android:textColor="@color/white"
-        android:text="发送语音信息"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:textStyle="normal"
-        android:textSize="25sp"
-        android:textColor="@color/white"
-        android:text="边小溪，周末一起爬山吧"/>
-</LinearLayout>
+        android:layout_margin="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/bg_send"
+        android:orientation="vertical"
+        android:layout_gravity="right">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="20dp"
+            android:text="发送语音信息"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginBottom="20dp"
+            android:text="边小溪，周末一起爬山吧"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- 角度 -->
+    <corners android:radius="10dp"/>
+    <!-- 填充色 -->
+    <solid android:color="@color/mc_action_menu_view_normal"/>
+    <!-- 描边 设置线宽及颜色 -->
+    <stroke android:color="#25000000"
+        android:width="4px"/>
+</shape>
