@@ -69,6 +69,11 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         mLastSendTime = 0;
+
+        if (SmartVoiceService.sRecord) {
+            SmartVoiceService.sRecord = false;
+            mContent.addView(LayoutInflater.from(this).inflate(R.layout.receive, null));
+        }
     }
 
     @Override

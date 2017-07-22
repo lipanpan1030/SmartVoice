@@ -44,6 +44,7 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
     NotificationManager mNotification;
 
     private boolean mActive;
+    public static boolean sRecord = false;
 
 
     public void onCreate() {
@@ -153,11 +154,12 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
                 break;
             case BUTTON_CANCEL:
                 mNotification.cancel(1);
-                break;
+                return;
             case BUTTON_REPLY:
                 mNotification.cancel(1);
+                sRecord = true;
+                return;
                 // 发一条信息出去
-                break;
             case PLAY_END:
                 mRemoteViews.setViewVisibility(R.id.play, View.GONE);
                 mRemoteViews.setViewVisibility(R.id.reply, View.VISIBLE);
@@ -181,12 +183,12 @@ public class SmartVoiceService extends Service implements SensorEventListener, P
 
         //设置next按钮的点击事件
         intent.putExtra(BUTTON_INDEX, BUTTON_CANCEL);
-        pendingIntent = PendingIntent.getService(this, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getService(this, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mRemoteViews.setOnClickPendingIntent(R.id.cancel, pendingIntent);
 
         //设置prev按钮的点击事件
         intent.putExtra(BUTTON_INDEX, BUTTON_REPLY);
-        pendingIntent = PendingIntent.getService(this, 3, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getService(this, 3, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mRemoteViews.setOnClickPendingIntent(R.id.reply, pendingIntent);
 
         builder.setContent(mRemoteViews);
